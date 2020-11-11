@@ -1,6 +1,7 @@
 function nama(x,y){
     return x.repeat(y)
-}console.log (nama("Ryan", 3))
+}
+// console.log (nama("Ryan", 3))
 
 // ---------------------------------
 
@@ -11,7 +12,7 @@ function repeat(str, num){
     }
     return output;
 }
-console.log(repeat("Ryan", 3))
+// console.log(repeat("Ryan", 3))
 
 // ---------------------------------
 
@@ -23,7 +24,7 @@ function nama(str){
     return str.charAt(str.length/2)
     }
 }
-console.log (nama("Papua"))
+// console.log (nama("Papua"))
 
 // -----------------------------------
 
@@ -35,4 +36,22 @@ function tengah(str) {
         return pisah[pisah.length / 2];
     }
 }
-console.log("Mobil")
+// console.log("Mobil")
+
+// ------------------------------------
+
+function xo(str) {
+    var x = 0;
+    var o = 0;
+    str = str.toLowerCase();
+    var split = str.split("");
+    for (var i = 0; i < split.length; i++){
+        if (split[i] == "x"){
+            x++;
+        } else if (split == "o"){
+            o++
+        }
+    }
+    return `X : ${x} | O : ${o}`;
+}
+console.log(xo("xXoOpP"))
