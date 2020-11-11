@@ -30,7 +30,7 @@ console.log (nama("Papua"))
 function tengah(str) {
     var pisah = str.split("")
     if (pisah.length % 2 == 0){
-        return pisah[pisah.length / 2 -1] + "" + pisah[pisah.length / 2];
+        return pisah[pisah.length / 2 -1] + pisah[pisah.length / 2];
     } else {
         return pisah[pisah.length / 2];
     }
