@@ -48,8 +48,8 @@ function xo(str) {
     for (var i = 0; i < split.length; i++){
         if (split[i] == "x"){
             x++;
-        } else if (split == "o"){
-            o++
+        } else if (split[i] == "o"){
+            o++;
         }
     }
     return `X : ${x} | O : ${o}`;
