@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, tr, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <div>
+            <input type="text" name="username" id="username" placeholder="Username">
+            <input type="password" name="password" id="password" placeholder="Password">
+            <button onclick="login()">
+                Log In
+            </button>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div id="tableContainer" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Activity</th>
+                        <th>Day</th>
+                        <th>Image</th>
+                        <th colspan="2" id="actionTh">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableContent">
+
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h4 id="output"></h4>
+        </div>
+        <button onclick="logout()">
+            Log Out
+        </button>
+    </center>
+</body>
+<script>
+
+    class Activity{
+        constructor(nama,hari,image){
+            this.nama = nama, 
+            this.hari = hari,
+            this.image = image
+        }
+    }
+
+    let data = [
+        new Activity('Lari','Senin','https://static.duniaku.net/2019/06/D9VoZlrVAAAJqp3.jpg'),
+        new Activity('Estafet','Selasa','https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F2.bp.blogspot.com%2F-07ECHstGxyk%2FT-dWKhQ-uCI%2FAAAAAAAAB2U%2FciVfMgHKdUo%2Fs1600%2FCat%2Bsleeping%2Bon%2Bguitar.jpg&f=1&nofb=1'),
+        new Activity('Basket','Rabu','https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F2.bp.blogspot.com%2F_Cc3gulUhlvs%2FTOsoFb7qtAI%2FAAAAAAAACr0%2FDkQKKvMpbUU%2Fs1600%2Fgambar-binatang.jpg&f=1&nofb=1'),
+        new Activity('Tinju','Kamis','https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2F4.bp.blogspot.com%2F-mOOAG-Irdxg%2FUMq6P7qvJ3I%2FAAAAAAAAGQg%2F5oY1UfrdnZ8%2Fs1600%2Fgambar%2Bayam%2Bkate%2B%2B9.JPG&f=1&nofb=1'),
+    ]
+
+    let logged;
+
+    let users = [
+        { username: 'lian', password: 'abc', role: 'user' },
+        { username: 'ryan', password: '123', role: 'admin' },
+    ]
+
+    function login(){
+        let username = document.getElementById("username").value; //"lian"
+        let password = document.getElementById("password").value; // "abc"
+
+        // for(var i = 0; i<users.length; i++){
+        //     if(username === users[i].username && password === users[i].password){
+        //         return document.getElementById("output").innerHTML = `Login sebagai: ${users[i].username}`;
+        //     }
+        // }
+        // return document.getElementById("output").innerHTML = `User tidak ditemukan`;
+
+        logged = users.find((val) => {
+            return val.username === username && val.password === password
+        });
+        console.log(logged);
+        if(logged){
+            document.getElementById("tableContainer").style.display = "inline";
+            showList(data);
+            return document.getElementById("output").innerHTML = `Login sebagai: ${logged.username} : ${logged.role}`
+        }else{
+            document.getElementById("tableContainer").style.display = "none";
+            return document.getElementById("output").innerHTML = `User tidak ditemukan`
+        }
+    }
+
+    function showList(data, param){
+        let newArr;
+        newArr = data.map((val, index) => {
+            if (index == param){
+                return(
+                    `
+                        <tr>
+                        <td>${index + 1}</td>
+                        <td><input type = "text" id = "editName" value=${val.nama}></td>
+                        <td>
+                            <select id = "editSelect">
+                            <option>Senin</option>
+                            <option>Selasa</option>
+                            <option>Rabu</option>
+                            <option>Kamis</option>
+                            <option>Jumat</option>
+                            <option>Sabtu</option>
+                            <option>Minggu</option>
+                            </select>
+                        </td>
+                        <td><input type = "text" id = "editImage"></td>
+                        <td><button onclick="confirmEdit(${index})">Save</button></td>
+                        <td><button onclick="cancelEdit(${index})">Cancel</button></td>
+                        </tr>
+                    `
+                    )}
+                    else{
+                        return(
+                    `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${val.nama}</td>
+                        <td>${val.hari}</td>
+                        <td><img src="${val.image}" alt="image${index}" height="200px" width="400px"></td>
+                        ${logged.role === 'admin' ? `<td><button onclick='editData(${index})'>Edit</button></td>
+                        <td><button onclick="deleteData(${index})">Delete</button></td>` : `<td></td>`}
+                        </tr>
+                        `
+                        )
+                    }
+                    })
+                    
+            let addTd = `
+            <tr>
+                <td></td>
+                <td><input type="text" id="act" placeholder="Nama aktifitas"></td>
+                <td>
+                    <select id = "select">
+                        <option>Senin</option>
+                        <option>Selasa</option>
+                        <option>Rabu</option>
+                        <option>Kamis</option>
+                        <option>Jumat</option>
+                        <option>Sabtu</option>
+                        <option>Minggu</option>
+                    </select>
+                </td>
+                <td><input type="text" id="pic" placeholder="URL gambar"></td>
+                <td colspan="2"><button onclick="add()">Add</button></td>
+            </tr>`
+        if(logged.role === "admin"){
+            return document.getElementById("tableContent").innerHTML = newArr.join("") + addTd;
+        }else{
+            return document.getElementById("tableContent").innerHTML = newArr.join("");
+        }
+    }
+    function cancelEdit(){
+      showList(data)
+    }
+    function confirmEdit(index){
+      var newName, newPrice, newStock;
+
+      newName = document.getElementById("editName").value;
+      newSelect = document.getElementById("editSelect").value;
+      newImage = document.getElementById("editImage").value;
+
+      data[index].nama = newName;
+      data[index].hari = newSelect;
+      data[index].image = newImage;
+ 
+      showList(data)
+    }
+
+    function add(){
+        var nama = document.getElementById("act").value;
+        var image = document.getElementById("pic").value;
+        var hari = document.getElementById("select").value;
+
+        data.push({
+            nama,
+            hari,
+            image,
+        })
+        showList(data)
+    }
+    function deleteData(index){
+        data.splice(index, 1);
+        showList(data)
+    }
+    function editData(index){
+        showList(data, index)
+        console.log(index)
+    }
+    function logout(){
+        document.getElementById("tableContent").innerHTML = ``;
+        document.getElementById("tableContainer").innerHTML = ``;
+        document.getElementById("output").innerHTML = ``;
+    }
+</script>
+</html>
